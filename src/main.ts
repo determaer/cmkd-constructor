@@ -1,5 +1,12 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
+import VueKonva from 'vue-konva'
+import { createPinia } from 'pinia'
 
-createApp(App).mount('#app')
+const pinia = createPinia()
+
+createApp(App)
+  .use(VueKonva)
+  .use(pinia)
+  .mount('#app')
+  
