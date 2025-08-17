@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@determaer/cmkd": "^1.0.9",
+    "@determaer/cmkd": "^1.0.15",
     "pinia": "^3.0.3",
     "vue": "^3.5.18"
   },
