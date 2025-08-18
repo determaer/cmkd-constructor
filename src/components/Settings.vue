@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { useLabelStore } from '../store/labelStore';
-import type { Label } from '../types/label';
+import { useModalEditNode } from '../modals/useEditNode';
 const store = useLabelStore()
 
-defineProps({
-  selectedLabel: Object as () => Label,
-})
-
 const emit = defineEmits(['unselect'])
+
+const editNode = async () => {
+  const labelId = store.selectedLabel ? store.selectedLabel.id : 0
+  const labelData = await useModalEditNode()
+  if (labelData.label){
+    const label = {...store.selectedLabel, ...labelData.label}
+    store.editLabel(label, labelId)
+    emit('unselect')
+  }
+}
+
 </script>
 
 <template>
@@ -18,15 +25,19 @@ const emit = defineEmits(['unselect'])
     Сбросить карту
   </button>
   <button 
-    v-if="selectedLabel"
+    v-if="store.selectedLabel"
     @click="() => {
+      const labelId = store.selectedLabel ? store.selectedLabel.id : 0
       emit('unselect')
-      store.deleteLabel(selectedLabel ? selectedLabel.id : 0)
+      store.deleteLabel(labelId)
     }"
   >
     Удалить узел
   </button>
-  <button v-if="selectedLabel">
+  <button 
+    v-if="store.selectedLabel"
+    @click="editNode"
+  >
     Редактировать узел
   </button>
 </template>

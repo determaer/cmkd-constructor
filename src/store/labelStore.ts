@@ -6,6 +6,8 @@ export const useLabelStore = defineStore('chats', () => {
   const labels = ref<Label[]>([])
   const isLabelsUpdated = ref(false)
   const forceResetSelected = ref(false)
+  const selectedLabel = ref<Label>()
+
   const defaultLabel : Label = {
     id: 0,
     index: 0,
@@ -72,13 +74,18 @@ export const useLabelStore = defineStore('chats', () => {
   }
 
   function editLabel(label: Label, labelId: number){
-    isLabelsUpdated.value = false
-    const index = labels.value.findIndex(l => l.id == labelId)
-    labels.value[index] = label
-    console.log(labels.value[index])
+    forceResetSelected.value = true
     nextTick(() => {
-      isLabelsUpdated.value = true
+      isLabelsUpdated.value = false
+      const index = labels.value.findIndex(l => l.id == labelId)
+      labels.value[index] = label
+      console.log(labels.value[index])
+      nextTick(() => {
+        isLabelsUpdated.value = true
+        forceResetSelected.value = false
+      })
     })
+    
   }
 
   function deleteLabel(labelId: number){
@@ -104,6 +111,7 @@ export const useLabelStore = defineStore('chats', () => {
     labels,
     isLabelsUpdated,
     forceResetSelected,
+    selectedLabel,
     newLabel,
     newCMKD,
     editLabel,
