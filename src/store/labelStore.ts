@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import type { Label } from '../types/label.ts';
 
 export const useLabelStore = defineStore('chats', () => {
@@ -7,7 +7,11 @@ export const useLabelStore = defineStore('chats', () => {
   const isLabelsUpdated = ref(false)
   const forceResetSelected = ref(false)
   const selectedLabel = ref<Label>()
-
+  const drawingMode = ref('default')
+  const showSupportRect = ref(false)
+  const showImportant = ref(false)
+  const allowInputPosition = ref(false)
+  const position = ref(0)
   const defaultLabel : Label = {
     id: 0,
     index: 0,
@@ -107,11 +111,27 @@ export const useLabelStore = defineStore('chats', () => {
     
   }
 
+  watch(
+    [() => drawingMode.value, () => showSupportRect.value, () => showImportant.value],
+    () => {
+      console.log('reload')
+      isLabelsUpdated.value = false
+      nextTick(() => {
+        isLabelsUpdated.value = true
+      })
+    }
+  )
+
   return {
     labels,
     isLabelsUpdated,
     forceResetSelected,
     selectedLabel,
+    drawingMode,
+    showSupportRect,
+    showImportant,
+    allowInputPosition,
+    position,
     newLabel,
     newCMKD,
     editLabel,
