@@ -8,7 +8,7 @@ import {
 
 import type { App } from 'vue'
 
-export function useModal<T>({component, attrs, Modal, modalAttrs}: any): Promise<any> {
+export function useModal({component, attrs, Modal, modalAttrs}: any): Promise<any> {
     return new Promise((resolve) => {
         const modalDiv = document.createElement('div')
         document.body.appendChild(modalDiv)
