@@ -18,13 +18,26 @@
       <option value="roundrect">Скруглённый квадрат</option>
       <option value="circle">Круг</option>
     </select>
-    <span>Цвет (от красного к зелёному): {{ objectLabel.score }}</span>
+    <div style="display: flex;">
+      <span style="width: 30%;">Цвет: {{ objectLabel.score }}</span>
+      <span class="preview-color-container">
+        <span 
+          class='preview-color'
+          :style="{
+            backgroundColor: resultColorPreview,
+            opacity: Math.abs(objectLabel.score)
+          }"
+        />
+      </span>
+      
+    </div>
+    
     <input
       v-model="objectLabel.score"
       type="range"
       min="-1"
       max="1"
-      step="0.1"
+      step="0.01"
       @input="onChange"
     >    
     <div style="display: flex;">
@@ -97,7 +110,7 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useLabelStore } from '../store/labelStore';
 
 const store = useLabelStore()
@@ -125,6 +138,13 @@ const onChange = () => {
   emit('change', {label: objectLabel});
 }
 
+const resultColorPreview = computed(() => {
+  if (objectLabel.value.score){
+    if (objectLabel.value.score < 0) return 'red'
+    else return 'green'
+  }
+})
+
 onMounted(() => {
   if (store.selectedLabel != undefined){
     objectLabel.value.typeText  = store.selectedLabel.typeText
@@ -144,4 +164,17 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.preview-color-container{
+  display: flex;
+  width: 15px;
+  height: 15px;
+  border: 1px solid black;
+}
+
+.preview-color{
+  width: 100%;
+  height: 100%;
+}
+</style>
