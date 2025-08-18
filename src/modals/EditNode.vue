@@ -59,6 +59,14 @@
         @input="onChange"
       >  
     </div>
+    <div style="display: flex;">
+      <span style="width: 50%;">Серый</span>
+      <input
+        v-model="objectLabel.grey"
+        type="checkbox"
+        @input="onChange"
+      >  
+    </div>
       
     <span>Число вариантов</span>
     <input
@@ -106,6 +114,7 @@ const objectLabel = ref({
   num: 1,
   fontStyle: '',
   connections: [0],
+  grey: false,
 })
 
 const emit = defineEmits(['change']);
@@ -129,6 +138,7 @@ onMounted(() => {
     objectLabel.value.num = store.selectedLabel.num
     objectLabel.value.fontStyle = store.selectedLabel.fontStyle
     objectLabel.value.connections = store.selectedLabel.connections
+    objectLabel.value.grey = store.selectedLabel.grey
   }
   emit('change', {label: objectLabel});
 })
