@@ -8,8 +8,9 @@ import type { Label } from './types/label.js'
 const cmkd = ref()
 
 const store = useLabelStore()
-const clickedElement = (info: {object: Label}) => {
-  store.selectedLabel = info.object
+const clickedElement = (info: {object: Label, type: string}) => {
+  if (info.type == 'label')
+    store.selectedLabel = info.object
 }
 
 onBeforeMount(() => {
