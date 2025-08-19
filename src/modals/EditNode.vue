@@ -11,7 +11,15 @@
       v-model="objectLabel.numText"
       type="text"
       @input="onChange"
-    >   
+    >
+    <span>Раздел</span>
+    <input
+      v-model="objectLabel.prop"
+      min="1"
+      max="10"
+      type="number"
+      @input="onChange"
+    >     
     <div 
       v-if="store.selectedLabel?.level == 0"
       style="display: flex; flex-direction: column;"
@@ -186,7 +194,8 @@ const objectLabel = ref({
   connections: [0],
   grey: false,
   secLength: 1,
-  isLabel: true
+  isLabel: true,
+  prop: 0,
 })
 
 const emit = defineEmits(['change']);
@@ -220,6 +229,7 @@ onMounted(() => {
     objectLabel.value.grey = store.selectedLabel.grey
     objectLabel.value.secLength = store.selectedLabel.secLength
     objectLabel.value.isLabel = store.selectedLabel.isLabel
+    objectLabel.value.prop = store.selectedLabel.prop
   }
   emit('change', {label: objectLabel});
 })

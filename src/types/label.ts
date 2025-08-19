@@ -1,7 +1,7 @@
 export interface Label{
   "id": number
-  "index": string|number
-  "prop": string|number
+  "index": number
+  "prop": number
   "typeText": string
   "numText": string
   "type": string
