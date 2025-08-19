@@ -11,13 +11,19 @@
       v-model="objectLabel.numText"
       type="text"
       @input="onChange"
-    >    
-    <span>Форма</span>
-    <select v-model="objectLabel.type" @change="onChange">
-      <option value="rect">Квадрат</option>
-      <option value="roundrect">Скруглённый квадрат</option>
-      <option value="circle">Круг</option>
-    </select>
+    >   
+    <div 
+      v-if="store.selectedLabel?.level == 0"
+      style="display: flex; flex-direction: column;"
+    >
+      <span>Форма</span>
+      <select v-model="objectLabel.type" @change="onChange">
+        <option value="rect">Квадрат</option>
+        <option value="roundrect">Скруглённый квадрат</option>
+        <option value="circle">Круг</option>
+      </select>
+    </div> 
+    
     <div style="display: flex;">
       <span style="width: 30%;">Цвет: {{ objectLabel.score }}</span>
       <span class="preview-color-container">
@@ -84,7 +90,10 @@
         @input="onChange"
       >  
     </div>
-    <div style="display: flex;">
+    <div
+      v-if="store.selectedLabel?.level == 0"  
+      style="display: flex;"
+    >
       <span style="width: 50%;">Серый</span>
       <input
         v-model="objectLabel.grey"
@@ -145,7 +154,7 @@
       v-if="store.selectedLabel?.level != 0" 
       style="display: flex;"
     >
-      <span style="width: 50%;">Представлен фигурой</span>
+      <span style="width: 80%;">Представлен фигурой</span>
       <input
         v-model="objectLabel.isLabel"
         type="checkbox"

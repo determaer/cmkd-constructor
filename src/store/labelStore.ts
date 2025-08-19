@@ -13,6 +13,7 @@ export const useLabelStore = defineStore('chats', () => {
   const allowInputPosition = ref(false)
   const position = ref(0)
   const levelNewLabel = ref(0)
+  const lastGivenID = ref(0)
 
   const firstLevelLabels = ref<Label[]>([])
   const secondLevelLabels = ref<Label[]>([])
@@ -58,11 +59,11 @@ export const useLabelStore = defineStore('chats', () => {
     isLabelsUpdated.value = false
     const newLabel = {
       ...defaultLabel, 
-      id: labels.value.length,
-      index: labels.value.length,
+      id: lastGivenID.value,
       numText: (labels.value.length + 1).toString(),
       level: levelNewLabel.value
     }
+    lastGivenID.value += 1
     if (levelNewLabel.value == 0)
       firstLevelLabels.value.push(newLabel)
     if (levelNewLabel.value == 1)
@@ -77,6 +78,7 @@ export const useLabelStore = defineStore('chats', () => {
 
   function newCMKD(labelsLength: number){
     if (labelsLength > 0){
+      lastGivenID.value = 0
       isLabelsUpdated.value = false
       firstLevelLabels.value = []
       secondLevelLabels.value = []
@@ -85,11 +87,11 @@ export const useLabelStore = defineStore('chats', () => {
         firstLevelLabels.value.push(
           {
             ...defaultLabel, 
-            id: i,
-            index: i,
+            id: lastGivenID.value,
             numText: (i + 1).toString(),
           }
         )
+        lastGivenID.value += 1
       }
       combineCMKD()
       nextTick(() => {
@@ -102,7 +104,6 @@ export const useLabelStore = defineStore('chats', () => {
     forceResetSelected.value = true
     nextTick(() => {
       isLabelsUpdated.value = false
-      const index = labels.value.findIndex(l => l.id == labelId)
       if (label.level == 0){
         const indexFirstLevel = firstLevelLabels.value.findIndex(l => l.id == labelId)
         firstLevelLabels.value[indexFirstLevel] = label
@@ -115,7 +116,7 @@ export const useLabelStore = defineStore('chats', () => {
         const indexThirdLevel = thirdLevelLabels.value.findIndex(l => l.id == labelId)
         thirdLevelLabels.value[indexThirdLevel] = label
       }
-      labels.value[index] = label
+      combineCMKD()
       nextTick(() => {
         isLabelsUpdated.value = true
         forceResetSelected.value = false
@@ -124,16 +125,23 @@ export const useLabelStore = defineStore('chats', () => {
     
   }
 
-  function deleteLabel(labelId: number){
+  function deleteLabel(level: number, labelId: number){
     forceResetSelected.value = true
     nextTick(() => {
       isLabelsUpdated.value = false
-      const index = labels.value.findIndex(l => l.id == labelId)
-      labels.value.splice(index, 1)
-      for (let i = 0; i < labels.value.length; i++){
-        labels.value[i].id = i
-        labels.value[i].index = i
+      if (level == 0){
+        const indexFirstLevel = firstLevelLabels.value.findIndex(l => l.id == labelId)
+        firstLevelLabels.value.splice(indexFirstLevel, 1)
       }
+      if (level == 1){
+        const indexSecondLevel = secondLevelLabels.value.findIndex(l => l.id == labelId)
+        secondLevelLabels.value.splice(indexSecondLevel, 1)
+      }
+      if (level == 2){
+        const indexThirdLevel = thirdLevelLabels.value.findIndex(l => l.id == labelId)
+        thirdLevelLabels.value.splice(indexThirdLevel, 1)
+      }
+      combineCMKD()
       nextTick(() => {
         isLabelsUpdated.value = true
         forceResetSelected.value = false

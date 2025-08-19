@@ -35,8 +35,9 @@ const editNode = async () => {
       v-if="store.selectedLabel"
       @click="() => {
         const labelId = store.selectedLabel ? store.selectedLabel.id : 0
+        const level = store.selectedLabel?.level ? store.selectedLabel.level : 0
         emit('unselect')
-        store.deleteLabel(labelId)
+        store.deleteLabel(level, labelId)
       }"
     >
       Удалить узел
