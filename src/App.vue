@@ -11,6 +11,8 @@ const store = useLabelStore()
 const clickedElement = (info: {object: Label, type: string}) => {
   if (info.type == 'label')
     store.selectedLabel = info.object
+  if (info.type == 'sector' && info.object.sLevel && info.object.sLevel > 0 && info.object.object)
+    store.selectedLabel = info.object.object
 }
 
 onBeforeMount(() => {

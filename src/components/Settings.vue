@@ -19,9 +19,15 @@ const editNode = async () => {
 
 <template>
   <div>
-    <button @click="store.newLabel()">
-      Добавить узел
-    </button>
+    <div>
+      <button @click="store.newLabel()">
+        Добавить узел
+      </button>
+      <select v-model="store.levelNewLabel">
+        <option v-for="i in 3" :value="i - 1">{{ i - 1 }} уровня</option>
+      </select>
+    </div>
+
     <button @click="store.newCMKD(5)">
       Сбросить карту
     </button>

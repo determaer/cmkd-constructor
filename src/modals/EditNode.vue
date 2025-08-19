@@ -40,7 +40,10 @@
       step="0.01"
       @input="onChange"
     >    
-    <div style="display: flex;">
+    <div 
+      v-if="store.selectedLabel?.level == 0"
+      style="display: flex;"
+    >
       <span style="width: 50%;">Начало сектора</span>
       <input
         v-model="objectLabel.secStart"
@@ -48,7 +51,10 @@
         @input="onChange"
       >   
     </div>
-    <div style="display: flex;">
+    <div 
+      v-if="store.selectedLabel?.level == 0"
+      style="display: flex;"
+    >
       <span style="width: 50%;">Конец сектора</span>
       <input
         v-model="objectLabel.secEnd"
@@ -56,7 +62,10 @@
         @input="onChange"
       >
     </div>
-    <div style="display: flex;">
+    <div
+      v-if="store.selectedLabel?.level == 0" 
+      style="display: flex;"
+    >
       <span style="width: 50%;">Вход стрелки</span>
       <input
         v-model="objectLabel.arrowIn"
@@ -64,7 +73,10 @@
         @input="onChange"
       >   
     </div>
-    <div style="display: flex;">
+    <div
+      v-if="store.selectedLabel?.level == 0" 
+      style="display: flex;"
+    >
       <span style="width: 50%;">Выход стрелки</span>
       <input
         v-model="objectLabel.arrowOut"
@@ -80,31 +92,67 @@
         @input="onChange"
       >  
     </div>
-      
-    <span>Число вариантов</span>
-    <input
-      v-model="objectLabel.num"
-      min="1"
-      max="10"
-      type="number"
-      @input="onChange"
-    >    
+    <div 
+      v-if="store.selectedLabel?.level == 0"
+      style="display: flex; flex-direction: column;"
+    >
+      <span>Число вариантов</span>
+      <input
+        v-model="objectLabel.num"
+        min="1"
+        max="10"
+        type="number"
+        @input="onChange"
+      >    
+    </div>  
+    
     <span>Тип начертания</span>
     <select v-model="objectLabel.fontStyle" @change="onChange">
       <option value="normal">Нормальный</option>
       <option value="bold">Полужирный</option>
       <option value="italic">Курсив</option>
     </select>
-    <span>Опорные элементы</span>
-    <select multiple v-model="objectLabel.connections" @change="onChange">
-      <option 
-        v-for="label of store.labels" 
-        :value="label.id"
-      >
-        {{ label.typeText + label.numText }}
-      </option>
-    </select> 
-    <span>Выбраны id: {{ objectLabel.connections }}</span>
+    <div 
+      v-if="store.selectedLabel?.level == 0"
+      style="display: flex; flex-direction: column;"
+    >
+      <span>Опорные элементы</span>
+      <select multiple v-model="objectLabel.connections" @change="onChange">
+        <option 
+          v-for="label of store.firstLevelLabels" 
+          :value="label.id"
+        >
+          {{ label.typeText + label.numText }}
+        </option>
+      </select> 
+      <span>Выбраны id: {{ objectLabel.connections }}</span>
+    </div>
+
+    <div 
+      v-if="store.selectedLabel?.level != 0"
+      style="display: flex; flex-direction: column;"
+    >
+      <span>Длина сектора</span>
+      <input
+        v-model="objectLabel.secLength"
+        min="1"
+        max="10"
+        type="number"
+        @input="onChange"
+      >    
+    </div> 
+    <div
+      v-if="store.selectedLabel?.level != 0" 
+      style="display: flex;"
+    >
+      <span style="width: 50%;">Представлен фигурой</span>
+      <input
+        v-model="objectLabel.isLabel"
+        type="checkbox"
+        @input="onChange"
+      >  
+    </div>
+    
   </div>
 </template>
 
@@ -128,6 +176,8 @@ const objectLabel = ref({
   fontStyle: '',
   connections: [0],
   grey: false,
+  secLength: 1,
+  isLabel: true
 })
 
 const emit = defineEmits(['change']);
@@ -159,6 +209,8 @@ onMounted(() => {
     objectLabel.value.fontStyle = store.selectedLabel.fontStyle
     objectLabel.value.connections = store.selectedLabel.connections
     objectLabel.value.grey = store.selectedLabel.grey
+    objectLabel.value.secLength = store.selectedLabel.secLength
+    objectLabel.value.isLabel = store.selectedLabel.isLabel
   }
   emit('change', {label: objectLabel});
 })

@@ -19,8 +19,10 @@ export interface Label{
   "secLength": number
   "lowLevel": number[]
   "highLevel": number[]
-  "position": number
   "grey": boolean
   "sectorName"?: string
   "drawAnyCase": boolean
+
+  "sLevel"?:number
+  "object"?:Label
 }
