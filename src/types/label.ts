@@ -1,4 +1,4 @@
-export interface Label{
+export interface Label {
   "id": number
   "index": number
   "prop": number
@@ -17,12 +17,9 @@ export interface Label{
   "level": number
   "isLabel": boolean
   "secLength": number
-  "lowLevel": number[]
-  "highLevel": number[]
   "grey": boolean
   "sectorName"?: string
   "drawAnyCase": boolean
-
   "sLevel"?:number
   "object"?:Label
 }

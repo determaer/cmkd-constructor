@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useLabelStore } from '../store/labelStore';
 import { useModalEditNode } from '../modals/useEditNode';
+import { useTemplateRef } from 'vue';
+import type { Label } from '../types/label';
 const store = useLabelStore()
+
+const fileInput = useTemplateRef('fileInput')
 
 const emit = defineEmits(['unselect', 'download'])
 
@@ -13,6 +17,47 @@ const editNode = async () => {
     store.editLabel(label, labelId)
     emit('unselect')
   }
+}
+
+const exportCMKDtoFile = () => {
+  console.log(store.firstLevelLabels, store.secondLevelLabels, store.thirdLevelLabels)
+  const data = JSON.stringify([store.firstLevelLabels, store.secondLevelLabels, store.thirdLevelLabels])
+  const blob = new Blob([data], {type: 'text/plain'})
+  const link = document.createElement('a');
+  link.download = "cmkd.json";
+  link.href = window.URL.createObjectURL(blob);
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+const importCMKDfromFile = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+}
+
+const selectedFileToImport = (event: Event) => {
+  const element = event.currentTarget as HTMLInputElement;
+  const file = element?.files?.[0]
+  if (file) {
+    console.log(file)
+    const reader = new FileReader()
+    reader.readAsText(file)
+
+    reader.onload = function(){
+      const res  = reader.result?.toString()
+      if (res){
+        const cmkdObject: [Label[], Label[], Label[]] = JSON.parse(res)
+        store.setCMKDfromFile(cmkdObject[0], cmkdObject[1], cmkdObject[2])
+      }
+    }
+    
+    reader.onerror = function() {
+      alert('Ошибка при чтении файла')
+    }
+
+   }
 }
 
 </script>
@@ -54,8 +99,18 @@ const editNode = async () => {
       <option value="light">Частная упрощённая</option>
     </select>
     
-    <button @click="emit('download')">Сохранить карту</button>
+    
   </div>
+  <button @click="emit('download')">Сохранить карту</button>
+  <button @click="exportCMKDtoFile">Экспорт карты</button>
+  <button @click="importCMKDfromFile">Импорт карты</button>
+  <input 
+    type="file" 
+    ref="fileInput" 
+    style="display: none;" 
+    @change="selectedFileToImport" 
+    accept=".json"
+  />
   <div>
     <span>Включить опцию</span>
     <input 

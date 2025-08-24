@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { nextTick, ref, watch } from 'vue';
 import type { Label } from '../types/label.ts';
 
-export const useLabelStore = defineStore('chats', () => {
+export const useLabelStore = defineStore('labels', () => {
   const labels = ref<Label[]>([])
   const isLabelsUpdated = ref(false)
   const forceResetSelected = ref(false)
@@ -38,8 +38,6 @@ export const useLabelStore = defineStore('chats', () => {
     level: 0,
     isLabel: true,
     secLength: 1,
-    lowLevel: [],
-    highLevel: [],
     grey: false,
     sectorName: '',
     drawAnyCase: true,
@@ -52,6 +50,17 @@ export const useLabelStore = defineStore('chats', () => {
       label.index = index
     })
     labels.value = tempLabels
+  }
+
+  function setCMKDfromFile(newFirstLabels: Label[], newSecondLabels: Label[], newThirdLabels: Label[]){
+    isLabelsUpdated.value = false
+    firstLevelLabels.value = newFirstLabels
+    secondLevelLabels.value = newSecondLabels
+    thirdLevelLabels.value = newThirdLabels
+    combineCMKD()
+    nextTick(() => {
+      isLabelsUpdated.value = true
+    })
   }
 
   function newLabel(){
@@ -164,6 +173,8 @@ export const useLabelStore = defineStore('chats', () => {
   return {
     labels,
     firstLevelLabels,
+    secondLevelLabels,
+    thirdLevelLabels,
     isLabelsUpdated,
     forceResetSelected,
     selectedLabel,
@@ -177,5 +188,6 @@ export const useLabelStore = defineStore('chats', () => {
     newCMKD,
     editLabel,
     deleteLabel,
+    setCMKDfromFile,
   }
 })
