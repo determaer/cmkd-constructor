@@ -23,3 +23,28 @@ export interface Label {
   "sLevel"?:number
   "object"?:Label
 }
+
+export function instanceOfLabel(label: any): label is Label {
+  return(
+    'id' in label &&
+    "index" in label &&
+    "prop" in label &&
+    "typeText" in label &&
+    "numText" in label &&
+    "type" in label &&
+    "num" in label &&
+    "score" in label &&
+    "isBase" in label &&
+    "connections" in label &&
+    "secStart" in label &&
+    "secEnd" in label &&
+    "fontStyle" in label &&
+    "arrowOut" in label &&
+    "arrowIn" in label &&
+    "level" in label &&
+    "isLabel" in label &&
+    "secLength" in label &&
+    "grey" in label &&
+    "drawAnyCase" in label
+    )
+}

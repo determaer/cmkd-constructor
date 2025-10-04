@@ -2,8 +2,8 @@
 
 const emit = defineEmits(['close', 'submit'])
 
-const closeModalOutside = (evt: any) => {
-  if (evt.target.classList.contains('modal-backdrop')) {
+const closeModalOutside = (evt: MouseEvent) => {
+  if (evt.target instanceof HTMLElement && evt.target.classList.contains('modal-backdrop')) {
     emit('close')
   }
 }

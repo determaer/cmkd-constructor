@@ -12,9 +12,8 @@ const emit = defineEmits(['unselect', 'download'])
 const editNode = async () => {
   const labelId = store.selectedLabel ? store.selectedLabel.id : 0
   const labelData = await useModalEditNode()
-  if (labelData.label){
-    const label = {...store.selectedLabel, ...labelData.label}
-    store.editLabel(label, labelId)
+  if (labelData){
+    store.editLabel(labelData, labelId)
     emit('unselect')
   }
 }

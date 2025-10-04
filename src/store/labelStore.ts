@@ -184,6 +184,7 @@ export const useLabelStore = defineStore('labels', () => {
     allowInputPosition,
     position,
     levelNewLabel,
+    defaultLabel,
     newLabel,
     newCMKD,
     editLabel,

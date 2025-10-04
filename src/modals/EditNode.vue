@@ -177,26 +177,11 @@
 
 import { computed, onMounted, ref } from 'vue';
 import { useLabelStore } from '../store/labelStore';
+import type { Label } from '../types/label';
 
 const store = useLabelStore()
 
-const objectLabel = ref({
-  typeText: '',
-  numText: '',
-  type: '',
-  score: 0,
-  secStart: false,
-  secEnd: false,
-  arrowIn: false,
-  arrowOut: false,
-  num: 1,
-  fontStyle: '',
-  connections: [0],
-  grey: false,
-  secLength: 1,
-  isLabel: true,
-  prop: 0,
-})
+const objectLabel = ref<Label>({...store.defaultLabel})
 
 const emit = defineEmits(['change']);
 
@@ -215,21 +200,7 @@ const resultColorPreview = computed(() => {
 
 onMounted(() => {
   if (store.selectedLabel != undefined){
-    objectLabel.value.typeText  = store.selectedLabel.typeText
-    objectLabel.value.numText = store.selectedLabel.numText
-    objectLabel.value.type = store.selectedLabel.type
-    objectLabel.value.score = store.selectedLabel.score
-    objectLabel.value.secStart = store.selectedLabel.secStart
-    objectLabel.value.secEnd = store.selectedLabel.secEnd
-    objectLabel.value.arrowIn = store.selectedLabel.arrowIn
-    objectLabel.value.arrowOut = store.selectedLabel.arrowOut
-    objectLabel.value.num = store.selectedLabel.num
-    objectLabel.value.fontStyle = store.selectedLabel.fontStyle
-    objectLabel.value.connections = store.selectedLabel.connections
-    objectLabel.value.grey = store.selectedLabel.grey
-    objectLabel.value.secLength = store.selectedLabel.secLength
-    objectLabel.value.isLabel = store.selectedLabel.isLabel
-    objectLabel.value.prop = store.selectedLabel.prop
+    objectLabel.value = {...store.selectedLabel}
   }
   emit('change', {label: objectLabel});
 })
