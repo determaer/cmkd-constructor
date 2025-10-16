@@ -12,10 +12,8 @@ const emit = defineEmits(['unselect', 'download'])
 const editNode = async () => {
   const labelId = store.selectedLabel ? store.selectedLabel.id : 0
   const labelData = await useModalEditNode()
-  if (labelData){
-    store.editLabel(labelData, labelId)
-    emit('unselect')
-  }
+  store.editLabel(labelData, labelId)
+  emit('unselect')
 }
 
 const exportCMKDtoFile = () => {

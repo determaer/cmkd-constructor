@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column;">
+  <div class='container'>
     <span>Префикс</span>
     <input
       v-model="objectLabel.typeText"
@@ -169,7 +169,14 @@
         @input="onChange"
       >  
     </div>
-    
+    <div class="buttons">
+      <button @click="emit('submit')">
+        OK
+      </button>
+      <button @click="emit('close')">
+        Cancel
+      </button>
+    </div>
   </div>
 </template>
 
@@ -183,8 +190,7 @@ const store = useLabelStore()
 
 const objectLabel = ref<Label>({...store.defaultLabel})
 
-const emit = defineEmits(['change']);
-
+const emit = defineEmits(['change', 'submit', 'close']);
 
 const onChange = () => {
   console.log('changing result object')
@@ -207,6 +213,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.container{
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
 
 .preview-color-container{
   display: flex;

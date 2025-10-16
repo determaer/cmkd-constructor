@@ -1,5 +1,5 @@
 export interface Label {
-  "id": number
+  readonly "id": number
   "index": number
   "prop": number
   "typeText": string
@@ -24,8 +24,9 @@ export interface Label {
   "object"?:Label
 }
 
-export function instanceOfLabel(label: any): label is Label {
+export function instanceOfLabel(label: unknown): label is Label {
   return(
+    label instanceof Object &&
     'id' in label &&
     "index" in label &&
     "prop" in label &&

@@ -1,17 +1,17 @@
-import { useModal } from './modal-wrapper/useModal';
-import Modal from './modal-wrapper/Modal.vue';
+import { Modal, useModal } from '@determaer/vue-use-modal'
 import { instanceOfLabel, type Label } from '../types/label';
 
-export const useModalEditNode = async () => {
+export const useModalEditNode = async () : Promise<Label | never> => {
   const data = await useModal({
     //в component должен быть встроен emit change(key: value)
     component: import('./EditNode.vue'),
     Modal,
   })
   if (data.label){
-    if (instanceOfLabel(data.label)){
-      return data.label as Label
+    const label = data.label
+    if (instanceOfLabel(label)){
+      return label
     }
   }
-  return false
+  throw new Error()
 }
