@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import Settings from './components/Settings.vue'
-import { CMKD } from '@determaer/cmkd'
-import { onBeforeMount, ref } from 'vue'
+import { CMKD, instanceOfLabel, instanceOfSector, type Info } from '@determaer/cmkd'
+import { onBeforeMount, useTemplateRef } from 'vue'
 import { useLabelStore } from './store/labelStore.js'
-import type { Label } from './types/label.js'
 
-const cmkd = ref()
+const cmkd = useTemplateRef('cmkd')
 
 const store = useLabelStore()
-const clickedElement = (info: {object: Label, type: string}) => {
-  if (info.type == 'label')
+const clickedElement = (info: Info) => {
+  if (info.type == 'label' && instanceOfLabel(info.object))
     store.selectedLabel = info.object
-  if (info.type == 'sector' && info.object.sLevel && info.object.sLevel > 0 && info.object.object)
+  if (info.type == 'sector' && instanceOfSector(info.object) && info.object.sLevel > 0 && info.object.object)
     store.selectedLabel = info.object.object
+  console.log(store.selectedLabel, info)
 }
 
 onBeforeMount(() => {
@@ -23,7 +23,7 @@ onBeforeMount(() => {
 <template>
   <Settings 
     @unselect="() => {store.selectedLabel = undefined}"
-    @download="() => {cmkd.downloadURI()}"
+    @download="() => {cmkd?.downloadURI()}"
   />
   <div v-if="store.isLabelsUpdated">
     <CMKD 
@@ -34,7 +34,10 @@ onBeforeMount(() => {
       :showSupportRect="store.showSupportRect"
       :showImportant="store.showImportant"
       :position="store.allowInputPosition ? store.position : undefined"
-      @clicked="clickedElement"
+      @clicked="(info) => {
+        if (info)
+          clickedElement(info)
+      }"
       @unclicked="() => {store.selectedLabel = undefined}"
     />
   </div>

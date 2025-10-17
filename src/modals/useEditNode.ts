@@ -1,5 +1,5 @@
 import { Modal, useModal } from '@determaer/vue-use-modal'
-import { instanceOfLabel, type Label } from '../types/label';
+import { type Label, instanceOfLabel } from '@determaer/cmkd';
 
 export const useModalEditNode = async () : Promise<Label | never> => {
   const data = await useModal({

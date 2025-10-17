@@ -2,7 +2,8 @@
 import { useLabelStore } from '../store/labelStore';
 import { useModalEditNode } from '../modals/useEditNode';
 import { useTemplateRef } from 'vue';
-import type { Label } from '../types/label';
+import { type Label } from '@determaer/cmkd';
+
 const store = useLabelStore()
 
 const fileInput = useTemplateRef('fileInput')

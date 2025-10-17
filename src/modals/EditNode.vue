@@ -181,14 +181,13 @@
 </template>
 
 <script setup lang="ts">
-
 import { computed, onMounted, ref } from 'vue';
 import { useLabelStore } from '../store/labelStore';
-import type { Label } from '../types/label';
+import { type Label, defaultLabel } from '@determaer/cmkd';
 
 const store = useLabelStore()
 
-const objectLabel = ref<Label>({...store.defaultLabel})
+const objectLabel = ref<Label>({...defaultLabel})
 
 const emit = defineEmits(['change', 'submit', 'close']);
 

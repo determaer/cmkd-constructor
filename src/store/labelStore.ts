@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { nextTick, ref, watch } from 'vue';
-import type { Label } from '../types/label.ts';
+import { type Label, defaultLabel } from '@determaer/cmkd';
 
 export const useLabelStore = defineStore('labels', () => {
   const labels = ref<Label[]>([])
@@ -18,30 +18,6 @@ export const useLabelStore = defineStore('labels', () => {
   const firstLevelLabels = ref<Label[]>([])
   const secondLevelLabels = ref<Label[]>([])
   const thirdLevelLabels = ref<Label[]>([])
-
-  const defaultLabel : Label = {
-    id: 0,
-    index: 0,
-    prop: 0,
-    typeText: "u",
-    numText: "1",
-    type: "circle",
-    num: 1,
-    score: 1,
-    isBase: true,
-    connections: [],
-    secStart: true,
-    secEnd: true,
-    fontStyle: "normal",
-    arrowOut: false,
-    arrowIn: false,
-    level: 0,
-    isLabel: true,
-    secLength: 1,
-    grey: false,
-    sectorName: '',
-    drawAnyCase: true,
-  }
 
   function combineCMKD(){
     labels.value = []
@@ -184,7 +160,6 @@ export const useLabelStore = defineStore('labels', () => {
     allowInputPosition,
     position,
     levelNewLabel,
-    defaultLabel,
     newLabel,
     newCMKD,
     editLabel,
