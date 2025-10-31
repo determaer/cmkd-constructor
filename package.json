@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint-fix": "npx eslint . --fix",
+    "lint": "npx eslint ."
   },
   "dependencies": {
-    "@determaer/cmkd": "^1.1.4",
-    "@determaer/vue-use-modal": "^1.0.1",
+    "@determaer/cmkd": "^1.1.5",
+    "@determaer/vue-use-modal": "^1.0.2",
     "pinia": "^3.0.3",
     "vue": "^3.5.18"
   },
@@ -19,7 +21,13 @@
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "^3.0.5",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vue": "^10.5.1",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.46.2"
   }
 }
 
