@@ -9,13 +9,28 @@ const fileInput = useTemplateRef("fileInput");
 
 const emit = defineEmits(["unselect", "download"]);
 
-const editNode = async () => {
+const editLabel = async () => {
   try {
     const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
     const labelData = await useModalEditNode();
     store.editLabel(labelData, labelId);
     emit("unselect");
   } catch {}
+};
+
+const deleteLabel = () => {
+  if (store.selectedLabel != undefined) {
+    store.deleteLabel(store.selectedLabel?.level, store.selectedLabel?.id);
+  }
+  emit("unselect");
+};
+
+const addLabel = () => {
+  store.addLabel();
+};
+
+const resetCMKDtoDefault = () => {
+  store.createNewCMKD(5);
 };
 
 const exportCMKDtoFile = () => {
@@ -33,6 +48,10 @@ const exportCMKDtoFile = () => {
     link.click();
     document.body.removeChild(link);
   } catch {}
+};
+
+const exportCMKDtoImage = () => {
+  emit("download");
 };
 
 const importCMKDfromFile = () => {
@@ -68,7 +87,7 @@ const selectedFileToImport = (event: Event) => {
 <template>
   <div>
     <div>
-      <button @click="store.addLabel()">Добавить узел</button>
+      <button @click="addLabel">Добавить узел</button>
       <select v-model="store.levelNewLabel">
         <option v-for="i in 3" :key="i" :value="i - 1">
           {{ i - 1 }} уровня
@@ -76,23 +95,11 @@ const selectedFileToImport = (event: Event) => {
       </select>
     </div>
 
-    <button @click="store.createNewCMKD(5)">Сбросить карту</button>
-    <button
-      v-if="store.selectedLabel"
-      @click="
-        () => {
-          const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
-          const level = store.selectedLabel?.level
-            ? store.selectedLabel.level
-            : 0;
-          emit('unselect');
-          store.deleteLabel(level, labelId);
-        }
-      "
-    >
+    <button @click="resetCMKDtoDefault">Сбросить карту</button>
+    <button v-if="store.selectedLabel" @click="deleteLabel">
       Удалить узел
     </button>
-    <button v-if="store.selectedLabel" @click="editNode">
+    <button v-if="store.selectedLabel" @click="editLabel">
       Редактировать узел
     </button>
     <select v-model="store.drawingMode">
@@ -101,7 +108,7 @@ const selectedFileToImport = (event: Event) => {
       <option value="light">Частная упрощённая</option>
     </select>
   </div>
-  <button @click="emit('download')">Сохранить карту</button>
+  <button @click="exportCMKDtoImage">Сохранить карту</button>
   <button @click="exportCMKDtoFile">Экспорт карты</button>
   <button @click="importCMKDfromFile">Импорт карты</button>
   <input
