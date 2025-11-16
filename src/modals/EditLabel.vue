@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useLabelStore } from "../store/labelStore";
-import { type Label, defaultLabel } from "@determaer/cmkd";
+import { computed, ref } from "vue";
+import { type Label } from "@determaer/cmkd";
 
-const store = useLabelStore();
+const props = defineProps<{
+  label: Label;
+  labels: Label[];
+}>();
 
-const objectLabel = ref<Label>(defaultLabel);
+const objectLabel = ref<Label>({ ...props.label });
 
 const emit = defineEmits(["change", "submit", "close"]);
 
 const onChange = () => {
-  console.log("changing result object");
   emit("change", { label: objectLabel });
 };
 
@@ -20,13 +21,6 @@ const resultColorPreview = computed(() => {
     else return "green";
   }
   return "white";
-});
-
-onMounted(() => {
-  if (store.selectedLabel != undefined) {
-    objectLabel.value = { ...store.selectedLabel };
-  }
-  emit("change", { label: objectLabel });
 });
 </script>
 
@@ -45,7 +39,7 @@ onMounted(() => {
       @input="onChange"
     />
     <div
-      v-if="store.selectedLabel?.level == 0"
+      v-if="objectLabel.level == 0"
       style="display: flex; flex-direction: column"
     >
       <span>Форма</span>
@@ -77,28 +71,28 @@ onMounted(() => {
       step="0.01"
       @input="onChange"
     />
-    <div v-if="store.selectedLabel?.level == 0" style="display: flex">
+    <div v-if="objectLabel.level == 0" style="display: flex">
       <span style="width: 50%">Начало сектора</span>
       <input v-model="objectLabel.secStart" type="checkbox" @input="onChange" />
     </div>
-    <div v-if="store.selectedLabel?.level == 0" style="display: flex">
+    <div v-if="objectLabel.level == 0" style="display: flex">
       <span style="width: 50%">Конец сектора</span>
       <input v-model="objectLabel.secEnd" type="checkbox" @input="onChange" />
     </div>
-    <div v-if="store.selectedLabel?.level == 0" style="display: flex">
+    <div v-if="objectLabel.level == 0" style="display: flex">
       <span style="width: 50%">Вход стрелки</span>
       <input v-model="objectLabel.arrowIn" type="checkbox" @input="onChange" />
     </div>
-    <div v-if="store.selectedLabel?.level == 0" style="display: flex">
+    <div v-if="objectLabel.level == 0" style="display: flex">
       <span style="width: 50%">Выход стрелки</span>
       <input v-model="objectLabel.arrowOut" type="checkbox" @input="onChange" />
     </div>
-    <div v-if="store.selectedLabel?.level == 0" style="display: flex">
+    <div v-if="objectLabel.level == 0" style="display: flex">
       <span style="width: 50%">Серый</span>
       <input v-model="objectLabel.grey" type="checkbox" @input="onChange" />
     </div>
     <div
-      v-if="store.selectedLabel?.level == 0"
+      v-if="objectLabel.level == 0"
       style="display: flex; flex-direction: column"
     >
       <span>Число вариантов</span>
@@ -118,16 +112,12 @@ onMounted(() => {
       <option value="italic">Курсив</option>
     </select>
     <div
-      v-if="store.selectedLabel?.level == 0"
+      v-if="objectLabel.level == 0"
       style="display: flex; flex-direction: column"
     >
       <span>Опорные элементы</span>
       <select v-model="objectLabel.connections" multiple @change="onChange">
-        <option
-          v-for="label of store.leveledLabels[0]"
-          :key="label.id"
-          :value="label.id"
-        >
+        <option v-for="label of labels" :key="label.id" :value="label.id">
           {{ label.typeText + label.numText }}
         </option>
       </select>
@@ -135,7 +125,7 @@ onMounted(() => {
     </div>
 
     <div
-      v-if="store.selectedLabel?.level != 0"
+      v-if="objectLabel.level != 0"
       style="display: flex; flex-direction: column"
     >
       <span>Длина сектора</span>
@@ -147,7 +137,7 @@ onMounted(() => {
         @input="onChange"
       />
     </div>
-    <div v-if="store.selectedLabel?.level != 0" style="display: flex">
+    <div v-if="objectLabel.level != 0" style="display: flex">
       <span style="width: 80%">Представлен фигурой</span>
       <input v-model="objectLabel.isLabel" type="checkbox" @input="onChange" />
     </div>

@@ -11,9 +11,13 @@ const emit = defineEmits(["unselect", "download"]);
 
 const editLabel = async () => {
   try {
-    const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
-    const labelData = await useModalEditLabel();
-    store.editLabel(labelData, labelId);
+    if (store.selectedLabel != undefined) {
+      const labelData = await useModalEditLabel(
+        store.selectedLabel,
+        store.leveledLabels[0],
+      );
+      store.editLabel(labelData, labelData.id);
+    }
     emit("unselect");
   } catch {}
 };

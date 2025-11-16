@@ -22,7 +22,6 @@ const clickedElement = (info: Info) => {
     info.object.object
   )
     store.selectedLabel = info.object.object;
-  console.log(store.selectedLabel, info);
 };
 
 onBeforeMount(() => {

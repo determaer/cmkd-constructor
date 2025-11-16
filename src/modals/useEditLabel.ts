@@ -11,12 +11,22 @@ function typeofReturnEditNode(value: unknown): value is ReturnEditNode {
   );
 }
 
-export const useModalEditLabel = async (): Promise<Label | never> => {
+export const useModalEditLabel = async (
+  label: Label,
+  labels: Label[],
+): Promise<Label | never> => {
   try {
-    const data = await useModal<ReturnEditNode>({
+    const data = await useModal<
+      ReturnEditNode,
+      { label: Label; labels: Label[] }
+    >({
       //в component должен быть встроен emit change(key: value)
       component: import("./EditLabel.vue"),
       Modal,
+      attrs: {
+        label,
+        labels,
+      },
     });
     if (typeofReturnEditNode(data)) {
       const label = data.label;
