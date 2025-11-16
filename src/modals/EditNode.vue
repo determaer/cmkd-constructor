@@ -133,7 +133,7 @@ import { type Label, defaultLabel } from "@determaer/cmkd";
 
 const store = useLabelStore();
 
-const objectLabel = ref<Label>({ ...defaultLabel });
+const objectLabel = ref<Label>(defaultLabel);
 
 const emit = defineEmits(["change", "submit", "close"]);
 
@@ -177,3 +177,4 @@ onMounted(() => {
   height: 100%;
 }
 </style>
+

@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
-import { nextTick, ref, watch } from "vue";
+import { ref } from "vue";
 import { type Label, defaultLabel } from "@determaer/cmkd";
 
 export const useLabelStore = defineStore("labels", () => {
   const labels = ref<Label[]>([]);
-  const isLabelsUpdated = ref(false);
-  const forceResetSelected = ref(false);
   const selectedLabel = ref<Label>();
   const drawingMode = ref<"score" | "default" | "light">("default");
   const showSupportRect = ref(false);
@@ -26,9 +24,6 @@ export const useLabelStore = defineStore("labels", () => {
       secondLevelLabels.value,
       firstLevelLabels.value,
     );
-    tempLabels.forEach((label, index) => {
-      label.index = index;
-    });
     labels.value = tempLabels;
   }
 
@@ -37,19 +32,14 @@ export const useLabelStore = defineStore("labels", () => {
     newSecondLabels: Label[],
     newThirdLabels: Label[],
   ) {
-    isLabelsUpdated.value = false;
     firstLevelLabels.value = newFirstLabels;
     secondLevelLabels.value = newSecondLabels;
     thirdLevelLabels.value = newThirdLabels;
     combineCMKD();
-    nextTick(() => {
-      isLabelsUpdated.value = true;
-    });
   }
 
   function newLabel() {
     //Учесть: для сводной карты отсчёт уровней идёт по убыванию - необходимо размещать высокоуровневые узлы в начале labels
-    isLabelsUpdated.value = false;
     const newLabel = {
       ...defaultLabel,
       id: lastGivenID.value,
@@ -61,15 +51,11 @@ export const useLabelStore = defineStore("labels", () => {
     if (levelNewLabel.value == 1) secondLevelLabels.value.push(newLabel);
     if (levelNewLabel.value == 2) thirdLevelLabels.value.push(newLabel);
     combineCMKD();
-    nextTick(() => {
-      isLabelsUpdated.value = true;
-    });
   }
 
   function newCMKD(labelsLength: number) {
     if (labelsLength > 0) {
       lastGivenID.value = 0;
-      isLabelsUpdated.value = false;
       firstLevelLabels.value = [];
       secondLevelLabels.value = [];
       thirdLevelLabels.value = [];
@@ -82,94 +68,58 @@ export const useLabelStore = defineStore("labels", () => {
         lastGivenID.value += 1;
       }
       combineCMKD();
-      nextTick(() => {
-        isLabelsUpdated.value = true;
-      });
     }
   }
 
   function editLabel(label: Label, labelId: number) {
-    forceResetSelected.value = true;
-    nextTick(() => {
-      isLabelsUpdated.value = false;
-      if (label.level == 0) {
-        const indexFirstLevel = firstLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        firstLevelLabels.value[indexFirstLevel] = label;
-      }
-      if (label.level == 1) {
-        const indexSecondLevel = secondLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        secondLevelLabels.value[indexSecondLevel] = label;
-      }
-      if (label.level == 2) {
-        const indexThirdLevel = thirdLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        thirdLevelLabels.value[indexThirdLevel] = label;
-      }
-      combineCMKD();
-      nextTick(() => {
-        isLabelsUpdated.value = true;
-        forceResetSelected.value = false;
-      });
-    });
+    if (label.level == 0) {
+      const indexFirstLevel = firstLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      firstLevelLabels.value[indexFirstLevel] = label;
+    }
+    if (label.level == 1) {
+      const indexSecondLevel = secondLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      secondLevelLabels.value[indexSecondLevel] = label;
+    }
+    if (label.level == 2) {
+      const indexThirdLevel = thirdLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      thirdLevelLabels.value[indexThirdLevel] = label;
+    }
+    combineCMKD();
   }
 
   function deleteLabel(level: number, labelId: number) {
-    forceResetSelected.value = true;
-    nextTick(() => {
-      isLabelsUpdated.value = false;
-      if (level == 0) {
-        const indexFirstLevel = firstLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        firstLevelLabels.value.splice(indexFirstLevel, 1);
-      }
-      if (level == 1) {
-        const indexSecondLevel = secondLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        secondLevelLabels.value.splice(indexSecondLevel, 1);
-      }
-      if (level == 2) {
-        const indexThirdLevel = thirdLevelLabels.value.findIndex(
-          (l) => l.id == labelId,
-        );
-        thirdLevelLabels.value.splice(indexThirdLevel, 1);
-      }
-      combineCMKD();
-      nextTick(() => {
-        isLabelsUpdated.value = true;
-        forceResetSelected.value = false;
-      });
-    });
+    if (level == 0) {
+      const indexFirstLevel = firstLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      firstLevelLabels.value.splice(indexFirstLevel, 1);
+    }
+    if (level == 1) {
+      const indexSecondLevel = secondLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      secondLevelLabels.value.splice(indexSecondLevel, 1);
+    }
+    if (level == 2) {
+      const indexThirdLevel = thirdLevelLabels.value.findIndex(
+        (l) => l.id == labelId,
+      );
+      thirdLevelLabels.value.splice(indexThirdLevel, 1);
+    }
+    combineCMKD();
   }
-
-  watch(
-    [
-      () => drawingMode.value,
-      () => showSupportRect.value,
-      () => showImportant.value,
-    ],
-    () => {
-      console.log("reload");
-      isLabelsUpdated.value = false;
-      nextTick(() => {
-        isLabelsUpdated.value = true;
-      });
-    },
-  );
 
   return {
     labels,
     firstLevelLabels,
     secondLevelLabels,
     thirdLevelLabels,
-    isLabelsUpdated,
-    forceResetSelected,
     selectedLabel,
     drawingMode,
     showSupportRect,
@@ -184,3 +134,4 @@ export const useLabelStore = defineStore("labels", () => {
     setCMKDfromFile,
   };
 });
+

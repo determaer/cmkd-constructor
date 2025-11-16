@@ -35,6 +35,7 @@ onBeforeMount(() => {
     @unselect="
       () => {
         store.selectedLabel = undefined;
+        cmkd?.resetClicked();
       }
     "
     @download="
@@ -43,27 +44,25 @@ onBeforeMount(() => {
       }
     "
   />
-  <div v-if="store.isLabelsUpdated">
-    <CMKD
-      ref="cmkd"
-      :labels="store.labels"
-      :force-reset-clicked="store.forceResetSelected"
-      :drawingMode="store.drawingMode"
-      :showSupportRect="store.showSupportRect"
-      :showImportant="store.showImportant"
-      :position="store.allowInputPosition ? store.position : undefined"
-      @clicked="
-        (info) => {
-          if (info) clickedElement(info);
-        }
-      "
-      @unclicked="
-        () => {
-          store.selectedLabel = undefined;
-        }
-      "
-    />
-  </div>
+  <CMKD
+    ref="cmkd"
+    :labels="store.labels"
+    :drawingMode="store.drawingMode"
+    :showSupportRect="store.showSupportRect"
+    :showImportant="store.showImportant"
+    :position="store.allowInputPosition ? store.position : undefined"
+    @clicked="
+      (info) => {
+        if (info) clickedElement(info);
+      }
+    "
+    @unclicked="
+      () => {
+        store.selectedLabel = undefined;
+      }
+    "
+  />
 </template>
 
 <style scoped></style>
+
