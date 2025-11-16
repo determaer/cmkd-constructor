@@ -49,6 +49,7 @@ onBeforeMount(() => {
     :drawingMode="store.drawingMode"
     :showSupportRect="store.showSupportRect"
     :showImportant="store.showImportant"
+    :showDefaultRect="store.showDefaultRect"
     :position="store.allowInputPosition ? store.position : undefined"
     @clicked="
       (info) => {

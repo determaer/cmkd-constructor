@@ -12,6 +12,7 @@ export const useLabelStore = defineStore("labels", () => {
   const drawingMode = ref<"score" | "default" | "light">("default");
   const showSupportRect = ref(false);
   const showImportant = ref(false);
+  const showDefaultRect = ref(false);
   const allowInputPosition = ref(false);
   const position = ref(0);
   const levelNewLabel = ref(0);
@@ -69,6 +70,7 @@ export const useLabelStore = defineStore("labels", () => {
     drawingMode,
     showSupportRect,
     showImportant,
+    showDefaultRect,
     allowInputPosition,
     position,
     levelNewLabel,

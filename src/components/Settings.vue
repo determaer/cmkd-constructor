@@ -141,6 +141,10 @@ const selectedFileToImport = (event: Event) => {
     <span>Выделение важных связей</span>
     <input v-model="store.showImportant" type="checkbox" />
   </div>
+  <div>
+    <span>Представление всех узлов в виде квадрата</span>
+    <input v-model="store.showDefaultRect" type="checkbox" />
+  </div>
 </template>
 
 <style scoped></style>
