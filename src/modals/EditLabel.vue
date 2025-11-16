@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useLabelStore } from "../store/labelStore";
+import { type Label, defaultLabel } from "@determaer/cmkd";
+
+const store = useLabelStore();
+
+const objectLabel = ref<Label>(defaultLabel);
+
+const emit = defineEmits(["change", "submit", "close"]);
+
+const onChange = () => {
+  console.log("changing result object");
+  emit("change", { label: objectLabel });
+};
+
+const resultColorPreview = computed(() => {
+  if (objectLabel.value.score) {
+    if (objectLabel.value.score < 0) return "red";
+    else return "green";
+  }
+  return "white";
+});
+
+onMounted(() => {
+  if (store.selectedLabel != undefined) {
+    objectLabel.value = { ...store.selectedLabel };
+  }
+  emit("change", { label: objectLabel });
+});
+</script>
+
 <template>
   <div class="container">
     <span>Префикс</span>
@@ -125,38 +157,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useLabelStore } from "../store/labelStore";
-import { type Label, defaultLabel } from "@determaer/cmkd";
-
-const store = useLabelStore();
-
-const objectLabel = ref<Label>(defaultLabel);
-
-const emit = defineEmits(["change", "submit", "close"]);
-
-const onChange = () => {
-  console.log("changing result object");
-  emit("change", { label: objectLabel });
-};
-
-const resultColorPreview = computed(() => {
-  if (objectLabel.value.score) {
-    if (objectLabel.value.score < 0) return "red";
-    else return "green";
-  }
-  return "white";
-});
-
-onMounted(() => {
-  if (store.selectedLabel != undefined) {
-    objectLabel.value = { ...store.selectedLabel };
-  }
-  emit("change", { label: objectLabel });
-});
-</script>
 
 <style scoped>
 .container {

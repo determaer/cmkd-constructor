@@ -11,11 +11,11 @@ function typeofReturnEditNode(value: unknown): value is ReturnEditNode {
   );
 }
 
-export const useModalEditNode = async (): Promise<Label | never> => {
+export const useModalEditLabel = async (): Promise<Label | never> => {
   try {
     const data = await useModal<ReturnEditNode>({
       //в component должен быть встроен emit change(key: value)
-      component: import("./EditNode.vue"),
+      component: import("./EditLabel.vue"),
       Modal,
     });
     if (typeofReturnEditNode(data)) {
@@ -25,3 +25,4 @@ export const useModalEditNode = async (): Promise<Label | never> => {
   } catch {}
   throw new Error();
 };
+

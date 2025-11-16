@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLabelStore } from "../store/labelStore";
-import { useModalEditNode } from "../modals/useEditNode";
+import { useModalEditLabel } from "../modals/useEditLabel";
 import { useTemplateRef } from "vue";
 
 const store = useLabelStore();
@@ -12,7 +12,7 @@ const emit = defineEmits(["unselect", "download"]);
 const editLabel = async () => {
   try {
     const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
-    const labelData = await useModalEditNode();
+    const labelData = await useModalEditLabel();
     store.editLabel(labelData, labelId);
     emit("unselect");
   } catch {}
