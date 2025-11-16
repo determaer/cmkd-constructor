@@ -11,7 +11,7 @@
     "lint": "npx eslint ."
   },
   "dependencies": {
-    "@determaer/cmkd": "^1.2.1",
+    "@determaer/cmkd": "^1.2.2",
     "@determaer/vue-use-modal": "^1.0.2",
     "pinia": "^3.0.3",
     "vue": "^3.5.18"
