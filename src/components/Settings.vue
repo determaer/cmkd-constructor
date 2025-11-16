@@ -2,7 +2,6 @@
 import { useLabelStore } from "../store/labelStore";
 import { useModalEditNode } from "../modals/useEditNode";
 import { useTemplateRef } from "vue";
-import { type Label } from "@determaer/cmkd";
 
 const store = useLabelStore();
 
@@ -11,30 +10,29 @@ const fileInput = useTemplateRef("fileInput");
 const emit = defineEmits(["unselect", "download"]);
 
 const editNode = async () => {
-  const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
-  const labelData = await useModalEditNode();
-  store.editLabel(labelData, labelId);
-  emit("unselect");
+  try {
+    const labelId = store.selectedLabel ? store.selectedLabel.id : 0;
+    const labelData = await useModalEditNode();
+    store.editLabel(labelData, labelId);
+    emit("unselect");
+  } catch {}
 };
 
 const exportCMKDtoFile = () => {
-  console.log(
-    store.firstLevelLabels,
-    store.secondLevelLabels,
-    store.thirdLevelLabels,
-  );
-  const data = JSON.stringify([
-    store.firstLevelLabels,
-    store.secondLevelLabels,
-    store.thirdLevelLabels,
-  ]);
-  const blob = new Blob([data], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.download = "cmkd.json";
-  link.href = window.URL.createObjectURL(blob);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  try {
+    const data = JSON.stringify([
+      store.leveledLabels[0],
+      store.leveledLabels[1],
+      store.leveledLabels[2],
+    ]);
+    const blob = new Blob([data], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.download = "cmkd.json";
+    link.href = window.URL.createObjectURL(blob);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch {}
 };
 
 const importCMKDfromFile = () => {
@@ -44,32 +42,33 @@ const importCMKDfromFile = () => {
 };
 
 const selectedFileToImport = (event: Event) => {
-  const element = event.currentTarget as HTMLInputElement;
-  const file = element?.files?.[0];
-  if (file) {
-    console.log(file);
-    const reader = new FileReader();
-    reader.readAsText(file);
+  try {
+    const element = event.currentTarget as HTMLInputElement;
+    const file = element?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsText(file);
 
-    reader.onload = function () {
-      const res = reader.result?.toString();
-      if (res) {
-        const cmkdObject: [Label[], Label[], Label[]] = JSON.parse(res);
-        store.setCMKDfromFile(cmkdObject[0], cmkdObject[1], cmkdObject[2]);
-      }
-    };
+      reader.onload = function () {
+        const res = reader.result?.toString();
+        if (res) {
+          const cmkdObject: typeof store.leveledLabels = JSON.parse(res);
+          store.setCMKDfromFile(cmkdObject);
+        }
+      };
 
-    reader.onerror = function () {
-      alert("Ошибка при чтении файла");
-    };
-  }
+      reader.onerror = function () {
+        alert("Ошибка при чтении файла");
+      };
+    }
+  } catch {}
 };
 </script>
 
 <template>
   <div>
     <div>
-      <button @click="store.newLabel()">Добавить узел</button>
+      <button @click="store.addLabel()">Добавить узел</button>
       <select v-model="store.levelNewLabel">
         <option v-for="i in 3" :key="i" :value="i - 1">
           {{ i - 1 }} уровня
@@ -77,7 +76,7 @@ const selectedFileToImport = (event: Event) => {
       </select>
     </div>
 
-    <button @click="store.newCMKD(5)">Сбросить карту</button>
+    <button @click="store.createNewCMKD(5)">Сбросить карту</button>
     <button
       v-if="store.selectedLabel"
       @click="

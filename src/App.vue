@@ -26,7 +26,7 @@ const clickedElement = (info: Info) => {
 };
 
 onBeforeMount(() => {
-  store.newCMKD(5);
+  store.createNewCMKD(5);
 });
 </script>
 

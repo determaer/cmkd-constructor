@@ -92,7 +92,7 @@
       <span>Опорные элементы</span>
       <select v-model="objectLabel.connections" multiple @change="onChange">
         <option
-          v-for="label of store.firstLevelLabels"
+          v-for="label of store.leveledLabels[0]"
           :key="label.id"
           :value="label.id"
         >
